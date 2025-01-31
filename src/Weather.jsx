@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import "./Weather.css"
 import search from "./assets/search.png";
 import clear from "./assets/clear.png";
@@ -11,6 +11,8 @@ import wind from "./assets/wind.png";
 
 
 function Weather(){
+
+    const inputRef = useRef();
 
     const [weatherData, setWeatherData] = useState(false);
 
@@ -59,8 +61,8 @@ function Weather(){
     return(
         <div className="weather">
             <div className="search-bar">
-                <input type="text" placeholder="Search"></input>
-                <img src={searchFunction} alt=""></img>
+                <input type="text" placeholder="Search" ref={inputRef}></input>
+                <img src={search} alt="" onClick={()=>searchFunction(inputRef.current.value)}></img>
             </div>
             <img src={weatherData.icon} alt="" className="weather-icon"></img>
             <p className="temperature">{weatherData.temperature}°C</p>
