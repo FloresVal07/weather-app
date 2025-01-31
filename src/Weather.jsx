@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Weather.css"
 import search from "./assets/search.png";
 import clear from "./assets/clear.png";
@@ -11,11 +11,34 @@ import wind from "./assets/wind.png";
 
 
 function Weather(){
+
+    const [weatherData, setWeatherData] = useState(false);
+
+    const searchFunction = async (city)=>{
+        try{
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${import.meta.env.VITE_APP_ID}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            console.log(data);
+            setWeatherData({
+                humidity: data.main.humidity,
+                windSpeed: data.wind.speed,
+            });
+        }catch (error){
+
+        }
+    }
+
+    useEffect(()=>{
+        searchFunction("London");
+    },[])
+
     return(
         <div className="weather">
             <div className="search-bar">
                 <input type="text" placeholder="Search"></input>
-                <img src={search} alt=""></img>
+                <img src={searchFunction} alt=""></img>
             </div>
             <img src={clear} alt="" className="weather-icon"></img>
             <p className="temperature">16°C</p>
