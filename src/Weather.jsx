@@ -14,16 +14,38 @@ function Weather(){
 
     const [weatherData, setWeatherData] = useState(false);
 
+    const allIcons = {
+        "01d": clear,
+        "01n": clear,
+        "02d": cloud,
+        "03d": cloud,
+        "03n": cloud,
+        "04d": drizzle,
+        "04n": drizzle,
+        "09d": rain,
+        "09n": rain,
+        "10d": rain,
+        "10n": rain,
+        "13d": snow,
+        "13n": snow
+    }
+
     const searchFunction = async (city)=>{
         try{
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${import.meta.env.VITE_APP_ID}`;
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
             const response = await fetch(url);
             const data = await response.json();
 
             console.log(data);
+
+            const icon = allIcons[data.weather[0].icon] || clear;
+
             setWeatherData({
                 humidity: data.main.humidity,
                 windSpeed: data.wind.speed,
+                temperature: Math.floor(data.main.temp),
+                location: data.name,
+                icon: icon
             });
         }catch (error){
 
@@ -40,21 +62,21 @@ function Weather(){
                 <input type="text" placeholder="Search"></input>
                 <img src={searchFunction} alt=""></img>
             </div>
-            <img src={clear} alt="" className="weather-icon"></img>
-            <p className="temperature">16°C</p>
-            <p className="location">London</p>
+            <img src={weatherData.icon} alt="" className="weather-icon"></img>
+            <p className="temperature">{weatherData.temperature}°C</p>
+            <p className="location">{weatherData.location}</p>
             <div className="weather-data">
                 <div className="col">
                     <img src={humidity} alt=""></img>
                     <div>
-                        <p>91%</p>
+                        <p>{weatherData.humidity}%</p>
                         <span>Humidity</span>
                     </div>
                 </div>
                 <div className="col">
                     <img src={wind} alt=""></img>
                     <div>
-                        <p>3.6 km/h</p>
+                        <p>{weatherData.windSpeed} km/h</p>
                         <span>Wind Speed</span>
                     </div>
                 </div>
